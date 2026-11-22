@@ -2,9 +2,9 @@
 
 # 🖥️ Join Unjoin Computer Tool
 
-**WPF GUI for Helpdesk teams to join, disjoin, and clean up computer objects across Active Directory and Microsoft Entra ID.**
+**WPF GUI for join, disjoin, and cleanup of computer objects in AD and Entra ID**
 
-Turns complex PowerShell operations into a friendly, color-coded interface for front-line support.
+A small helpdesk window for domain joins, OU selection, AD object deletion, and device status. It turns common PowerShell steps into buttons with clear status colors.
 
 [![UI](https://img.shields.io/badge/UI-WPF%20Tailwind%20Slate-3B82F6?style=for-the-badge&logo=windows&logoColor=white)](#%EF%B8%8F-usage)
 [![Theme](https://img.shields.io/badge/Theme-Color%20Coded%20Status-8B5CF6?style=for-the-badge)](#%EF%B8%8F-usage)
@@ -13,7 +13,7 @@ Turns complex PowerShell operations into a friendly, color-coded interface for f
 [![License](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)](#-license)
 [![Version](https://img.shields.io/badge/Version-2.5.0-334155?style=for-the-badge)](#-overview)
 
-[Overview](#-overview) • [Features](#-core-features) • [Usage](#%EF%B8%8F-usage) • [Requirements](#%EF%B8%8F-requirements) • [License](#-license)
+[Overview](#-overview) • [Features](#-core-features) • [Structure](#-project-structure) • [Usage](#%EF%B8%8F-usage) • [Parameters](#%EF%B8%8F-parameters) • [Requirements](#%EF%B8%8F-requirements) • [License](#-license)
 
 </div>
 
@@ -21,53 +21,56 @@ Turns complex PowerShell operations into a friendly, color-coded interface for f
 
 # 📖 Overview
 
-**Join Unjoin Computer Tool** is a PowerShell WPF GUI built for Helpdesk teams to safely manage computer objects across **Active Directory (AD)** and **Microsoft Entra ID (Azure AD)**. It covers domain join and disjoin (with OU selection), AD object deletion with safeguards, Entra ID join and leave, Intune enrollment, and a live device information snapshot, all with confirmation prompts and color-coded status indicators.
+Join Unjoin Computer Tool is a PowerShell WPF window for everyday computer object work in Active Directory, Entra ID, and Intune. It handles domain join and disjoin with OU selection, deletion of AD computer accounts, Entra ID join and leave, Intune enrollment, and a live snapshot of device status. Confirmation prompts and colored status indicators keep the risky steps visible.
 
-Two builds ship side by side: **v1 (Classic)** and **v2 (Enhanced)** with credential validation, DC reachability checks, and a Message Center log.
+Two builds ship together. Version 1 (Classic, 2.1.0) includes Intune personal-device enrollment and a broader set of dialogs. Version 2 (Enhanced, 2.5.0) adds credential validation, domain controller reachability checks, and a Message Center with a copyable log. Use v2 for normal support work.
 
 ### 🖼️ Screenshots
 
-![Main Window v1](Screenshot1.png)
+![Main window of version 1](Screenshot1.png)
 
-*Main interface v1 (Classic build).*
+*Version 1, the Classic build.*
 
-![Main Window v2](Screenshot2.png)
+![Main window of version 2](Screenshot2.png)
 
-*Main interface v2 (Enhanced build with Message Center and validation pills).*
+*Version 2, with the Message Center and credential status.*
 
 ---
 
 # ✨ Core Features
 
 ### 🔹 Domain Join and Disjoin
-* Join a computer to AD with OU picker; disjoin to a workgroup with restart prompt.
+* Join a computer to AD by picking an OU and supplying credentials
+* Disjoin a machine and place it in a workgroup, with a restart prompt
 
 ### 🔹 AD Object Deletion
-* Delete computer objects with validation and double confirmation; warns when the account is still enabled.
+* Version 1 can delete inactive or unwanted computer accounts and warns when the account is still enabled
+* Version 2 only allows deletion when the computer account is disabled
 
 ### 🔹 Entra ID and Intune
-* Join and leave Microsoft Entra ID via `dsregcmd`; detect Intune enrollment as personal device.
+* Join or leave Microsoft Entra ID with `dsregcmd`
+* Version 1 can also start Intune enrollment for a personal device
 
 ### 🔹 Device Information Snapshot
-* Domain, IP, Entra ID join state, SCCM client, and Co-Management posture with live refresh.
+* Shows domain state, IP address, Entra join state, SCCM client, and co-management status
+* A refresh button updates the values
 
 ### 🔹 Helpdesk Safety
-* Color-coded status (Active, Inactive, Needs Attention), credential validation pill, and DC reachability check on ports 389 and 88.
-
-### 🔹 Light / Dark Theme
-* Full Tailwind Slate token system with instant toggle.
+* Colored status indicators for Active, Inactive, and Needs Attention
+* Version 2 validates credentials and checks the domain controller on ports 389 and 88
+* Version 2 logs actions in a Message Center with Copy All and Clear
 
 ---
 
 # 📂 Project Structure
 
 ```text
-JoinUnjoinComputerTool-GUI
+JoinUnjoinComputerTool/
 │
-├── JoinUnjoinComputerTool-v1.ps1
-├── JoinUnjoinComputerTool-v1.exe
-├── JoinUnjoinComputerTool-v2.ps1
-├── JoinUnjoinComputerTool-v2.exe
+├── JoinUnjoinComputerTool-v1.ps1     # Classic build, version 2.1.0
+├── JoinUnjoinComputerTool-v1.exe     # Compiled v1
+├── JoinUnjoinComputerTool-v2.ps1     # Enhanced build, version 2.5.0
+├── JoinUnjoinComputerTool-v2.exe     # Compiled v2
 ├── Screenshot1.png
 ├── Screenshot2.png
 └── README.md
@@ -78,67 +81,81 @@ JoinUnjoinComputerTool-GUI
 # 🚀 Getting Started
 
 ### Prerequisites
-* Windows 10/11 or Windows Server 2016+
-* PowerShell **5.1 or later**
-* Must be run as **Administrator**
+* Windows 10/11 or Windows Server 2016 and later
+* PowerShell **5.1** with WPF
+* An elevated session. Domain membership changes need administrator rights
 
 ### Installation
-1. Download `JoinUnjoinComputerTool-v1.ps1` or `JoinUnjoinComputerTool-v2.ps1` (v2 recommended).
-2. Run from an elevated PowerShell session: `.\JoinUnjoinComputerTool-v2.ps1`
-3. Or launch the compiled executable `JoinUnjoinComputerTool-v2.exe` without changing execution policy.
 
----
+1. Download `JoinUnjoinComputerTool-v2.ps1` unless you need the Classic build
+2. Run it from an elevated PowerShell session:
 
-# 🖥️ Usage
+```powershell
+.\JoinUnjoinComputerTool-v2.ps1
+```
 
-### Main Window
-* Join: select an OU and enter credentials, then join the computer to AD.
-* Disjoin: remove the computer from AD and move it to WORKGROUP.
-* Delete AD Object: remove the computer account from AD after confirmation.
-* Entra ID: join or leave Microsoft Entra ID with the dsregcmd controls.
-* Device Info: refresh to view domain, IP, Entra ID, SCCM, and Co-Management status.
+3. Or start `JoinUnjoinComputerTool-v2.exe`, which needs no execution policy change
 
-### Exit Codes
-| Code | Status |
-| ---- | ------ |
-| 0    | Normal exit after the user closes the window |
+### Typical Workflow
+
+1. Review the device information panel
+2. Join or disjoin the computer, or delete a computer object
+3. Use the Entra ID controls if the device needs registration changes
+4. Refresh the device panel to confirm the result
+
+### Parameters
+
+Both scripts accept the same three parameters. Defaults differ by build.
+
+| Parameter | Type | v1 default | v2 default | Description |
+|-----------|------|------------|------------|-------------|
+| `DefaultDomainController` | String | `DC01.company.local` | `dc01.example.local` | Domain controller used for AD queries |
+| `DefaultDomainName` | String | `company.local` | `example.local` | Domain used for joins and disjoins |
+| `DefaultSearchBase` | String | `OU=Computers,DC=company,DC=local` | `OU=Domain Computers,DC=example,DC=local` | OU used as the join target |
+
+```powershell
+.\JoinUnjoinComputerTool-v2.ps1 -DefaultDomainController "dc02.contoso.local" -DefaultDomainName "contoso.local"
+```
+
+The tool is a GUI and has no exit code contract. It ends when you close the window.
 
 ---
 
 # ⚙️ Requirements
 
 ### Operating System
-* Windows 10 / Windows 11 / Windows Server 2016+
+* Windows 10 / Windows 11 / Windows Server 2016 and later
 
 ### PowerShell
-* PowerShell **5.1 or later**
+* Windows PowerShell **5.1** with WPF (`PresentationFramework`)
 
-### Permissions
-* Administrator privileges.
-* AD permissions for computer join, disjoin, and deletion; Entra ID permissions for device registration tasks.
+### Modules and Permissions
+* Version 1 loads the `ActiveDirectory` module for domain operations
+* Version 2 uses `System.DirectoryServices.AccountManagement`
+* Administrator rights on the local machine, plus AD rights to join, disjoin, and delete computer objects
+* Entra ID device registration needs an account allowed to register devices
+* The SCCM client is only needed to display co-management status
 
 ---
 
 ## 🧰 Core Commands
 
-The PowerShell cmdlets and tools that drive the GUI operations.
-
 | Command | Purpose | Docs |
 |---|---|---|
-| `Get-ADComputer` | Locates and inspects computer objects in AD | [Microsoft Docs](https://learn.microsoft.com/en-us/powershell/module/activedirectory/get-adcomputer) |
 | `Add-Computer` | Joins the machine to the domain with OU selection | [Microsoft Docs](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/add-computer) |
-| `Remove-Computer` | Disjoins the machine to a workgroup | [Microsoft Docs](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-computer) |
-| `Get-CimInstance` | Reads Win32_ComputerSystem for domain/device state | [Microsoft Docs](https://learn.microsoft.com/en-us/powershell/module/cimcmdlets/get-ciminstance) |
-| `dsregcmd` | Joins/leaves Entra ID and reports device join state | [Microsoft Learn](https://learn.microsoft.com/en-us/entra/identity/devices/troubleshoot-device-dsregcmd) |
+| `Remove-Computer` | Disjoins the machine and places it in a workgroup | [Microsoft Docs](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-computer) |
+| `Get-CimInstance` | Reads `Win32_ComputerSystem` for domain and device state | [Microsoft Docs](https://learn.microsoft.com/en-us/powershell/module/cimcmdlets/get-ciminstance) |
+| `dsregcmd` | Joins or leaves Entra ID and reports join state | [Microsoft Learn](https://learn.microsoft.com/en-us/entra/identity/devices/troubleshoot-device-dsregcmd) |
 
 ---
 
 # 🛡 Operational Notes
-* Always use **v2** for daily support tasks unless debugging v1.
-* Use accounts with **least privilege** (OU join rights only) where possible.
-* Confirm before deleting objects from AD; deletion is irreversible.
-* If the script fails to launch, run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted -Force` or use the `.exe` build.
-* For Entra ID failures, verify network and run `dsregcmd /status` manually; for Co-Management issues, check the `CoManagementFlags` registry key.
+
+* Use v2 for daily support. Keep v1 only when you need its Intune enrollment dialog or are debugging it
+* Give the helpdesk account only the OU rights it needs. Domain Admin should not be the default
+* Deleting an AD object cannot be undone. Check the name twice before confirming
+* If a script is blocked, run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted -Force`, or use the `.exe` build
+* For Entra ID failures, check the network and run `dsregcmd /status` by hand. For co-management issues, inspect the `CoManagementFlags` registry value
 
 ---
 
@@ -151,6 +168,7 @@ Website: [momar.tech](https://momar.tech)
 ---
 
 ## 📜 License
+
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ---
@@ -160,7 +178,6 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 This skill and every script it generates are provided as-is with no warranty of any kind. Test generated tools in a staging environment before deploying to production. The authors assume no liability for any damage or data loss resulting from their use.
 
 ---
-
 <div align="center">
 
 ⭐ **If this skill saves you time, star the repo — it helps others find it.**
